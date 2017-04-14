@@ -10,6 +10,8 @@
 		1D1D733F1E8D3DEC006765E7 /* SocialScreenCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D1D733E1E8D3DEC006765E7 /* SocialScreenCollectionViewCell.swift */; };
 		1DCF2A051E9BC4B300EE1FB4 /* PieChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1DCF2A041E9BC4B300EE1FB4 /* PieChartView.swift */; };
 		1DE621C11E8E881C006E685F /* SocialScreenPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1DE621C01E8E881C006E685F /* SocialScreenPageViewController.swift */; };
+		1DF780891EA08DBE00E57383 /* UIApplication+VKPopupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1DF780871EA08DBE00E57383 /* UIApplication+VKPopupView.swift */; };
+		1DF7808A1EA08DBE00E57383 /* VKPopupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1DF780881EA08DBE00E57383 /* VKPopupView.swift */; };
 		2100653F1DE2DA2800F20880 /* SettingsVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2100653E1DE2DA2800F20880 /* SettingsVM.swift */; };
 		2123BD9F1DDAC9EE00A0D5DD /* SignupVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2123BD9E1DDAC9EE00A0D5DD /* SignupVM.swift */; };
 		216C90B71DD99ED60032A425 /* LoginVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 216C90A21DD99ED60032A425 /* LoginVC.swift */; };
@@ -43,6 +45,8 @@
 		1D1D733E1E8D3DEC006765E7 /* SocialScreenCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SocialScreenCollectionViewCell.swift; sourceTree = "<group>"; };
 		1DCF2A041E9BC4B300EE1FB4 /* PieChartView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PieChartView.swift; sourceTree = "<group>"; };
 		1DE621C01E8E881C006E685F /* SocialScreenPageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SocialScreenPageViewController.swift; sourceTree = "<group>"; };
+		1DF780871EA08DBE00E57383 /* UIApplication+VKPopupView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIApplication+VKPopupView.swift"; sourceTree = "<group>"; };
+		1DF780881EA08DBE00E57383 /* VKPopupView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VKPopupView.swift; sourceTree = "<group>"; };
 		2100653E1DE2DA2800F20880 /* SettingsVM.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsVM.swift; sourceTree = "<group>"; };
 		2123BD9E1DDAC9EE00A0D5DD /* SignupVM.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignupVM.swift; sourceTree = "<group>"; };
 		216C90A21DD99ED60032A425 /* LoginVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginVC.swift; sourceTree = "<group>"; };
@@ -103,6 +107,15 @@
 				1DE621C01E8E881C006E685F /* SocialScreenPageViewController.swift */,
 			);
 			path = PageController;
+			sourceTree = "<group>";
+		};
+		1DF780861EA08DBE00E57383 /* VKPopupView */ = {
+			isa = PBXGroup;
+			children = (
+				1DF780871EA08DBE00E57383 /* UIApplication+VKPopupView.swift */,
+				1DF780881EA08DBE00E57383 /* VKPopupView.swift */,
+			);
+			path = VKPopupView;
 			sourceTree = "<group>";
 		};
 		2100653D1DE2D98300F20880 /* SettingsViewModal */ = {
@@ -167,6 +180,7 @@
 		216C90A31DD99ED60032A425 /* MainVC */ = {
 			isa = PBXGroup;
 			children = (
+				1DF780861EA08DBE00E57383 /* VKPopupView */,
 				1DE621BF1E8E881C006E685F /* PageController */,
 				216C90A61DD99ED60032A425 /* MainVC.swift */,
 				216C90AB1DD99ED60032A425 /* WebView */,
@@ -482,6 +496,7 @@
 				2100653F1DE2DA2800F20880 /* SettingsVM.swift in Sources */,
 				1D1D733F1E8D3DEC006765E7 /* SocialScreenCollectionViewCell.swift in Sources */,
 				21D738721E016C0E00B591A8 /* Constants.swift in Sources */,
+				1DF780891EA08DBE00E57383 /* UIApplication+VKPopupView.swift in Sources */,
 				21D738741E01767E00B591A8 /* CommonFunctions.swift in Sources */,
 				21F956961DDD834500B4171D /* ShareEndpoint.swift in Sources */,
 				1DE621C11E8E881C006E685F /* SocialScreenPageViewController.swift in Sources */,
@@ -491,6 +506,7 @@
 				216C90BF1DD99F2A0032A425 /* LoginVM.swift in Sources */,
 				216C90BB1DD99ED60032A425 /* SettingsVC.swift in Sources */,
 				21F297E21DFFED6900DF1FE0 /* SocialCell.swift in Sources */,
+				1DF7808A1EA08DBE00E57383 /* VKPopupView.swift in Sources */,
 				21F9569A1DDD8C7100B4171D /* UserMapper.swift in Sources */,
 				21FDEC3A1DC8727A006AE5A6 /* textField.swift in Sources */,
 				216C90B91DD99ED60032A425 /* WebViewVC.swift in Sources */,

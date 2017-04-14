@@ -57,6 +57,8 @@ class MainVM
     let endpointClosure = { (target: Share) -> Endpoint<Share> in
         let defaultEndpoint = MoyaProvider.defaultEndpointMapping(target)
         let authkey = "bearer " + (UserDefaults.standard.value(forKey: userDefaultsKey.accessToken.rawValue) as! String)
+        print("The auth key is  : ")
+        print("\(authkey)")
         return defaultEndpoint.adding(newHttpHeaderFields: ["authorization": authkey])
     }
     
@@ -75,12 +77,14 @@ class MainVM
   }
     
     @objc func resetGraphNotification(){
-//        updateStatus()
+        //updateStatus()
     }
   
 //MARK: - Social Button Clicked
     func socialBtnClicked(_ index:Int) {
-        changeChildView(index)
+        statusTimeArr = [0,0,0,0,0,0,0,0]
+        statusTimeArr[index]=1
+        //changeChildView(index)
     //    setIndicatorColor(btn.tag)
     }    
     
@@ -142,6 +146,9 @@ class MainVM
                     if(userMap?.UstatusCode == 200)
                     {
                         let userDt = userMap?.UserData
+                        print("The fb usage data is : \(userDt?.facebookTime)")
+                        print("The instagram usage data is : \(userDt?.instagramTime)")
+                        print("The twitter usage data is : \(userDt?.twitterTime)")
                         let nc = NotificationCenter.default
                         nc.post(name: Notification.Name("DataPieChanged"), object: self, userInfo: ["userModel": userDt!])
                         

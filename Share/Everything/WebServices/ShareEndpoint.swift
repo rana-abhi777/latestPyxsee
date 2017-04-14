@@ -104,7 +104,7 @@ extension Share: TargetType {
                 return self.rawValue
             }
         }
-        
+                
         switch self {
         case .Login(let email, let passwd):
             let params: [String: Any] = [

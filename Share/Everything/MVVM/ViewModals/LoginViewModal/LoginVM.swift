@@ -40,6 +40,8 @@ class LoginVM {
         case .next(let userMap):
           if(userMap?.UstatusCode == 200)
           {
+            //MARK: Access Token
+            print("The access token of user: ")
             print(userMap?.UserData?.UaccessToken ?? "")
             if(self.LoginVCObj.btnRemember.tag==1)
             {

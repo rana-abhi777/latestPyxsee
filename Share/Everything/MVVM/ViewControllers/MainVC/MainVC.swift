@@ -29,6 +29,7 @@ class MainVC: UIViewController {
     var indexSelected = Int()
     //outlet for pieChart from the Charts ------------------
     var sliceSelected: PieSlice?
+    let popupView = VKPopupView(backgroundStyle: .dark, contentViewStyle: .extraLight) // view popup effect
     
     fileprivate static let alpha: Float = 1.0
     let colors = [
@@ -46,6 +47,7 @@ class MainVC: UIViewController {
         UIColor.gray.withAlphaComponent(CGFloat(alpha))
     ]
     fileprivate var currentColorIndex = 0
+    var flagSelected = false
     // ends
 
     
@@ -55,11 +57,21 @@ class MainVC: UIViewController {
     @IBOutlet weak var graphImage: UIImageView!
     
     ///*editing
+    //magnification of pie chart
+    
+    @IBOutlet weak var scrollViewMain: UIScrollView!
+    @IBOutlet weak var viewMagnifyPieChart: UIView!
+    @IBOutlet weak var lblSoicalNameMagnified: UILabel!
+    @IBOutlet weak var lblSocialValueMagnified: UILabel!
+    
+    @IBOutlet var lblSocialNameCollection: [UILabel]!
+    @IBOutlet var lblSocialValueCollection: [UILabel]!
+    
+    //ends
     @IBOutlet weak var collViewSocialScreen: UICollectionView!
     @IBOutlet weak var pageControl: UIPageControl!
     
-    @IBOutlet weak var lblSocialName: UILabel!
-    @IBOutlet weak var lblSocialValue: UILabel!
+   
     
     @IBOutlet weak var chartView: PieChart!
     @IBOutlet weak var collView: UICollectionView!
@@ -75,14 +87,13 @@ class MainVC: UIViewController {
         viewModel = MainVM(mainVCObj:self)
         let nc = NotificationCenter.default
         nc.addObserver(self, selector: #selector(updateIndex), name: Notification.Name("IndexChanged"), object: nil)
-        lblSocialName.text = ""
-        lblSocialValue.text = ""
-        chartView.delegate = self
+        chartView.delegate = self // chart view delegate
         // refreshing the piechart data
         let pc = NotificationCenter.default
         pc.addObserver(self, selector: #selector(refreshPieChart), name: Notification.Name("DataPieChanged"), object: nil)
         //pc.addObserver(self, selector: #selector(startPieChart), name: Notification.Name("DataPieChanged"), object: nil)
-        
+        // magnified pie chart
+        viewMagnifyPieChart.isHidden = true
         bindingUI()
     }
     func startPieChart(_ not: Notification) {
@@ -98,14 +109,14 @@ class MainVC: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         //------pieChart Code--------------
         //chartView.layers = [createPlainTextLayer()/*, createTextWithLinesLayer()*/]
+        
+        //observer to update the pie chart
         let pc = NotificationCenter.default
         pc.addObserver(self, selector: #selector(startPieChart), name: Notification.Name("DataPieChanged"), object: nil)
         chartView.models = createModels() // order is important - models have to be set at the end
-        //chartView.models.removeAll()
         //---------------------------------
         
         self.userName.text=(UserDefaults.standard.value(forKey: userDefaultsKey.userName.rawValue) as! String)
-        // Updating chart data
         if(UserDefaults.standard.value(forKey: userDefaultsKey.bgColor.rawValue) != nil ){
             
             let bgColor:Data = UserDefaults.standard.value(forKey: userDefaultsKey.bgColor.rawValue) as! Data
@@ -177,8 +188,6 @@ class MainVC: UIViewController {
                 imageData = UIImage.init(named:"ic_facebook-2")!
                 selectedImageData =  UIImage.init(named:"ic_fb_circle")!
             }
-            
-            
             if(UserDefaults.standard.value(forKey: socialName) != nil)
             {
                 let value:String = UserDefaults.standard.value(forKey: socialName) as! String
@@ -188,7 +197,6 @@ class MainVC: UIViewController {
                     selectedImage.append(selectedImageData)
                     selectedName.append(socialStr)
                     selectedTag.append(index)
-                    
                 }
             }
             else
@@ -198,12 +206,7 @@ class MainVC: UIViewController {
                 selectedName.append(socialStr)
                 selectedTag.append(index)
             }
-
         }
-        
-        self.lblSocialName.text = selectedName[0]
-       //collView.reloadData()
-        
     }
     
     override func viewDidDisappear(_ animated: Bool) {
@@ -213,16 +216,17 @@ class MainVC: UIViewController {
     func reloadUpperCollView(_ indexSelected: Int) {
         if selectedIndex != indexSelected {
             selectedIndex = indexSelected
-            lblSocialName.text = selectedName[selectedIndex]
-            lblSocialValue.text = ""
+            //lblSocialName.text = selectedName[selectedIndex]
+            //lblSocialValue.text = ""
+            let selectedVal:Int = self.selectedTag[selectedIndex]
+           
+            self.viewModel?.socialBtnClicked(selectedVal)
             removePreviousPieChart(chartView)
             chartView.models = createModels()
             collView.reloadData()
         }
     }
     func updateIndex(not: Notification) {
-        
-        
         // userInfo is the payload send by sender of notification
         if let userInfo = not.userInfo {
             // Safely unwrap the name sent out by the notification sender
@@ -254,6 +258,7 @@ class MainVC: UIViewController {
                 if let rowIndex :Int = self.collView.indexPathsForSelectedItems?[0].row {
                     if(self.selectedIndex==rowIndex){ return }
                     self.selectedIndex=rowIndex
+                    
                     self.collView.reloadData()
                     
                 }
@@ -293,7 +298,6 @@ class MainVC: UIViewController {
     func updateStatus() {
         viewModel?.updateStatus()
         viewModel?.sendStatus()
-        //viewModel?.updateStatus()
     }
     func removePreviousPieChart(_ chartView: PieChart) {
         for view in chartView.subviews {
@@ -309,9 +313,33 @@ class MainVC: UIViewController {
             // Safely unwrap the name sent out by the notification sender
             if let data = userInfo["userModel"] as? UserData {
                 chartView.models = updateModels(data)
+                setValuesAfterUpdation(data)
                 //chartView.layers = [createPlainTextLayer()/*, createTextWithLinesLayer()*/]
             }
         }
+    }
+    func setValuesAfterUpdation(_ data: UserData) {
+        var arrayTime = [Int]()
+        arrayTime.append(data.fbTime)
+        arrayTime.append(data.instaTIme)
+        arrayTime.append(data.twitTime)
+        arrayTime.append(data.tumbTime)
+        arrayTime.append(data.vinTime)
+        arrayTime.append(data.pinTime)
+        arrayTime.append(data.linktime)
+        arrayTime.append(data.ytubeTime)
+        setValuesInViewPopUp(arrayTime)
+
+    }
+    func setValuesInViewPopUp(_ dataArrayToSet: [Int]) {
+        print("The data array fetched from the data of api is \n\(dataArrayToSet)")
+        for index in 0..<lblSocialNameCollection.count {
+            lblSocialNameCollection[index].text = selectedName[index]
+            lblSocialValueCollection[index].text = "\(dataArrayToSet[index])"
+        }
+    }
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        chartView.isUserInteractionEnabled = false
     }
 }
 
@@ -335,14 +363,28 @@ extension MainVC : UICollectionViewDelegateFlowLayout {
         }
         return UIEdgeInsets.zero
     }
+    
 }
 
 //MARK: PieChart Delegate
 extension MainVC: PieChartDelegate {
     func onSelected(slice: PieSlice, selected: Bool) {
-        print("Selected: \(selected), slice: \(slice)")
-        lblSocialName.text = socialSelected[slice.hashValue].capitalized
-        lblSocialValue.text = String(slice.data.model.value) + "%"
+        //print("Selected: \(selected), slice: \(slice)")
+        if selected == true {
+            self.viewMagnifyPieChart.isHidden = false
+            flagSelected = true
+            scrollViewMain.isScrollEnabled = false
+            self.lblSoicalNameMagnified.text = self.socialSelected[slice.hashValue].capitalized
+            self.lblSocialValueMagnified.text = "\(slice.data.model.value) seconds"
+            self.viewMagnifyPieChart.superview?.bringSubview(toFront: self.viewMagnifyPieChart)
+            self.viewMagnifyPieChart.backgroundColor = self.colors[slice.hashValue]
+        }
+        else if selected == false {
+            scrollViewMain.isScrollEnabled = true
+            viewMagnifyPieChart.isHidden = true
+            flagSelected = false
+        }
+        
     }
     // MARK: - Models
     
@@ -366,14 +408,15 @@ extension MainVC: PieChartDelegate {
     fileprivate func updateModels(_ data: UserData) -> [PieSliceModel] {
         
         let updateModels = [
-            PieSliceModel(value: Double(data.facebookTime), color: colors[0]),
-            PieSliceModel(value: Double(data.instagramTime), color: colors[1]),
-            PieSliceModel(value: Double(data.linkedInTime), color: colors[2]),
-            PieSliceModel(value: Double(data.twitterTime), color: colors[3]),
-            PieSliceModel(value: Double(data.pinterestTime), color: colors[4]),
-            PieSliceModel(value: Double(data.youtubeTime), color: colors[5]),
-            PieSliceModel(value: Double(data.vineTime), color: colors[6]),
-            PieSliceModel(value: Double(data.vineTime), color: colors[7])
+            PieSliceModel(value: Double(data.fbTime), color: colors[0]),
+            PieSliceModel(value: Double(data.instaTIme), color: colors[1]),
+            PieSliceModel(value: Double(data.twitTime), color: colors[2]),
+            PieSliceModel(value: Double(data.tumbTime), color: colors[3]),
+            PieSliceModel(value: Double(data.vinTime), color: colors[4]),
+            PieSliceModel(value: Double(data.pinTime), color: colors[5]),
+            PieSliceModel(value: Double(data.linktime), color: colors[6]),
+            PieSliceModel(value: Double(data.ytubeTime), color: colors[7])
+            //fbTime instaTIme twitTime tumbTime vinTime pinTime linktime ytubeTime
         ]
         
         currentColorIndex = updateModels.count
@@ -429,6 +472,7 @@ extension UIColor {
         return UIColor(red: .random(), green: .random(), blue: .random(), alpha: 1.0)
     }
 }
+
 
 
 
