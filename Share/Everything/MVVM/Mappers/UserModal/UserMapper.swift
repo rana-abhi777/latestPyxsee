@@ -61,6 +61,8 @@ struct UserData: Mappable{
     var linktime:Int!
     var ytubeTime:Int!
     
+    var totalTime:Int!
+    
     init(map: Mapper) throws{
         UaccessToken = try? map.from("accessToken")
         userDetails = (try? map.from("userDetails")) ?? nil
@@ -79,10 +81,11 @@ struct UserData: Mappable{
         tumbTime = (try? map.from("tumbTime")) ?? 1
         twitTime = (try? map.from("twitTime")) ?? 1
         pinTime = (try? map.from("pinTime")) ?? 1
-        vinTime = (try? map.from("vineTime")) ?? 1
+        vinTime = (try? map.from("vinTime")) ?? 1
         linktime = (try? map.from("linktime")) ?? 1
         ytubeTime = (try? map.from("ytubeTime")) ?? 1
         
+        totalTime = (try? map.from("totalTime")) ?? 1
         
     }
 }

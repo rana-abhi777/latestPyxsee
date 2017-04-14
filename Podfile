@@ -14,6 +14,7 @@ target 'Share' do
   pod 'IQKeyboardManagerSwift'
   pod 'Instabug'
   pod 'PieCharts'
+  pod 'SVProgressHUD'
   # Pods for Share
 
 end

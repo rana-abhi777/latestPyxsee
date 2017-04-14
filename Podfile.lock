@@ -55,6 +55,7 @@ PODS:
   - SDWebImage/WebP (3.8.2):
     - libwebp
     - SDWebImage/Core
+  - SVProgressHUD (2.1.2)
 
 DEPENDENCIES:
   - EMPageViewController
@@ -67,6 +68,7 @@ DEPENDENCIES:
   - RxOptional
   - RxSwift (~> 3.0)
   - SDWebImage/WebP
+  - SVProgressHUD
 
 SPEC CHECKSUMS:
   Alamofire: 7682d43245de14874acd142ec137b144aa1dd335
@@ -83,7 +85,8 @@ SPEC CHECKSUMS:
   RxOptional: b97b59183af80d1e729ac9e51d09a10be668d6a8
   RxSwift: af5680055c4ad04480189c52d28385b1029493a6
   SDWebImage: 098e97e6176540799c27e804c96653ee0833d13c
+  SVProgressHUD: c404a55d78acbeb7ebb78b76d3faf986475a6994
 
-PODFILE CHECKSUM: 8bfda55571f28630b13650a42a37b48577fbc585
+PODFILE CHECKSUM: 4a02491422917db4596e5841bc9b9a95d7edb4e0
 
 COCOAPODS: 1.2.0

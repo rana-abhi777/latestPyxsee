@@ -69,6 +69,11 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
+		<key>SVProgressHUD.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
 		<key>libwebp.xcscheme</key>
 		<dict>
 			<key>isShown</key>
@@ -82,12 +87,22 @@
 			<key>primary</key>
 			<true/>
 		</dict>
+		<key>122DF88E003B5B1B858F3E0870CF694B</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>1C42919100DAC22F4E1B0E98C759C159</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
 		<key>283950111F1872AF673720D31153B5B7</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>420B6CFC5AF847E7D4679452A31105E5</key>
+		<key>2E9C94F1A923546EF713F964441BD682</key>
 		<dict>
 			<key>primary</key>
 			<true/>
@@ -102,17 +117,7 @@
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>6188F7EBBBD1AD6D9B6A20120D8FF676</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
 		<key>70C9A4A03E17C36171A54A4341DA5DBE</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>7E19E9AA3176D2E6E41B3A850C567839</key>
 		<dict>
 			<key>primary</key>
 			<true/>
@@ -127,7 +132,12 @@
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>AD89C62660E3340A5C18D80E7086E6A0</key>
+		<key>B542B81AB4B86CF87EDC4B6FC250A70C</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>E49B90A155A6D3D446693B449656D5AE</key>
 		<dict>
 			<key>primary</key>
 			<true/>

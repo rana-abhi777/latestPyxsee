@@ -10,6 +10,7 @@ import UIKit
 import RxCocoa
 import RxSwift
 import PieCharts
+import SVProgressHUD
 
 
 class MainVC: UIViewController {
@@ -48,6 +49,7 @@ class MainVC: UIViewController {
     ]
     fileprivate var currentColorIndex = 0
     var flagSelected = false
+    var time = 10
     // ends
 
     
@@ -66,6 +68,9 @@ class MainVC: UIViewController {
     
     @IBOutlet var lblSocialNameCollection: [UILabel]!
     @IBOutlet var lblSocialValueCollection: [UILabel]!
+    @IBOutlet weak var lbltotalTimeSpentName: UILabel!
+    @IBOutlet weak var lblTotalTimeSpentValue: UILabel!
+    @IBOutlet weak var lblValuePercentageCenterPieChart: UILabel!
     
     //ends
     @IBOutlet weak var collViewSocialScreen: UICollectionView!
@@ -96,24 +101,30 @@ class MainVC: UIViewController {
         viewMagnifyPieChart.isHidden = true
         bindingUI()
     }
-    func startPieChart(_ not: Notification) {
-        if let userInfo = not.userInfo {
-            // Safely unwrap the name sent out by the notification sender
-            if let data = userInfo["userModel"] as? UserData {
-                chartView.models = createModels()
-                //chartView.layers = [createPlainTextLayer()/*, createTextWithLinesLayer()*/]
-            }
-        }
-    }
+//    func startPieChart(_ not: Notification) {
+//        if let userInfo = not.userInfo {
+//            // Safely unwrap the name sent out by the notification sender
+//            if let _ = userInfo["userModel"] as? UserData {
+//                chartView.models = createModels()
+//                //chartView.layers = [createPlainTextLayer()/*, createTextWithLinesLayer()*/]
+//            }
+//        }
+//    }
     
     override func viewWillAppear(_ animated: Bool) {
         //------pieChart Code--------------
         //chartView.layers = [createPlainTextLayer()/*, createTextWithLinesLayer()*/]
         
         //observer to update the pie chart
-        let pc = NotificationCenter.default
-        pc.addObserver(self, selector: #selector(startPieChart), name: Notification.Name("DataPieChanged"), object: nil)
+//        let pc = NotificationCenter.default
+//        pc.addObserver(self, selector: #selector(startPieChart), name: Notification.Name("DataPieChanged"), object: nil)
         chartView.models = createModels() // order is important - models have to be set at the end
+        statusTimer = Timer.scheduledTimer(timeInterval: TimeInterval(time), target: self, selector: #selector(updateStatus), userInfo: nil, repeats: true)
+        SVProgressHUD.show()
+        //blurView(super.view)
+        super.view.isUserInteractionEnabled = false
+        let gameTimer: Timer!
+        statusTimer = Timer.scheduledTimer(timeInterval: TimeInterval(time), target: self, selector: #selector(removeProgressHUD), userInfo: nil, repeats: false)
         //---------------------------------
         
         self.userName.text=(UserDefaults.standard.value(forKey: userDefaultsKey.userName.rawValue) as! String)
@@ -126,7 +137,7 @@ class MainVC: UIViewController {
             self.btnHome.backgroundColor=color
             self.graphCenterView.backgroundColor=color
         }
-        statusTimer = Timer.scheduledTimer(timeInterval: 10, target: self, selector: #selector(updateStatus), userInfo: nil, repeats: true)
+        statusTimer = Timer.scheduledTimer(timeInterval: TimeInterval(time), target: self, selector: #selector(updateStatus), userInfo: nil, repeats: true)
         
         imageObservavle.value.removeAll()
         selectedImage.removeAll()
@@ -208,6 +219,17 @@ class MainVC: UIViewController {
             }
         }
     }
+    func blurView(_ view: UIView) {
+        let blurEffect = UIBlurEffect(style: UIBlurEffectStyle.dark)
+        let blurEffectView = UIVisualEffectView(effect: blurEffect)
+        blurEffectView.frame = view.bounds
+        blurEffectView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        view.addSubview(blurEffectView)
+    }
+    func removeProgressHUD() {
+        SVProgressHUD.dismiss()
+        super.view.isUserInteractionEnabled = true
+    }
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
@@ -216,14 +238,23 @@ class MainVC: UIViewController {
     func reloadUpperCollView(_ indexSelected: Int) {
         if selectedIndex != indexSelected {
             selectedIndex = indexSelected
-            //lblSocialName.text = selectedName[selectedIndex]
-            //lblSocialValue.text = ""
             let selectedVal:Int = self.selectedTag[selectedIndex]
-           
             self.viewModel?.socialBtnClicked(selectedVal)
+            //SVProgressHUD.dismiss()
             removePreviousPieChart(chartView)
             chartView.models = createModels()
+            
             collView.reloadData()
+            if viewMagnifyPieChart.isHidden == true {
+                
+            }
+            else {
+                print("Showing you the view man!")
+            }
+//            self.viewModel?.socialBtnClicked(selectedVal)
+//            removePreviousPieChart(chartView)
+//            chartView.models = createModels()
+//            collView.reloadData()
         }
     }
     func updateIndex(not: Notification) {
@@ -299,6 +330,7 @@ class MainVC: UIViewController {
         viewModel?.updateStatus()
         viewModel?.sendStatus()
     }
+    
     func removePreviousPieChart(_ chartView: PieChart) {
         for view in chartView.subviews {
             view.removeFromSuperview()
@@ -307,6 +339,7 @@ class MainVC: UIViewController {
         chartView.models.removeAll()
         chartView.layers.removeAll()
     }
+    
     func refreshPieChart(_ not: Notification) {
         removePreviousPieChart(chartView)
         if let userInfo = not.userInfo {
@@ -314,10 +347,12 @@ class MainVC: UIViewController {
             if let data = userInfo["userModel"] as? UserData {
                 chartView.models = updateModels(data)
                 setValuesAfterUpdation(data)
+                
                 //chartView.layers = [createPlainTextLayer()/*, createTextWithLinesLayer()*/]
             }
         }
     }
+    
     func setValuesAfterUpdation(_ data: UserData) {
         var arrayTime = [Int]()
         arrayTime.append(data.fbTime)
@@ -328,19 +363,20 @@ class MainVC: UIViewController {
         arrayTime.append(data.pinTime)
         arrayTime.append(data.linktime)
         arrayTime.append(data.ytubeTime)
-        setValuesInViewPopUp(arrayTime)
-
+        setValuesInViewPopUp(arrayTime, data.totalTime)
     }
-    func setValuesInViewPopUp(_ dataArrayToSet: [Int]) {
+    
+    func setValuesInViewPopUp(_ dataArrayToSet: [Int], _ totalTime: Int) {
         print("The data array fetched from the data of api is \n\(dataArrayToSet)")
         for index in 0..<lblSocialNameCollection.count {
             lblSocialNameCollection[index].text = selectedName[index]
-            lblSocialValueCollection[index].text = "\(dataArrayToSet[index])"
+            lblSocialValueCollection[index].text = "\(dataArrayToSet[index] / 60) mins \(dataArrayToSet[index] % 60) sec"
         }
+        lblTotalTimeSpentValue.text = "\(Int(totalTime / 3600)) hrs \(totalTime / 60) mins \(totalTime % 60) sec"
     }
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        chartView.isUserInteractionEnabled = false
-    }
+//    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+//        chartView.isUserInteractionEnabled = false
+//    }
 }
 
 extension MainVC : UICollectionViewDelegateFlowLayout {
@@ -369,13 +405,15 @@ extension MainVC : UICollectionViewDelegateFlowLayout {
 //MARK: PieChart Delegate
 extension MainVC: PieChartDelegate {
     func onSelected(slice: PieSlice, selected: Bool) {
-        //print("Selected: \(selected), slice: \(slice)")
+        print("Selected: \(selected), slice: \(slice)")
+        
         if selected == true {
             self.viewMagnifyPieChart.isHidden = false
+            lblValuePercentageCenterPieChart.text = "\(Int(slice.data.percentage * 100))%"
             flagSelected = true
             scrollViewMain.isScrollEnabled = false
             self.lblSoicalNameMagnified.text = self.socialSelected[slice.hashValue].capitalized
-            self.lblSocialValueMagnified.text = "\(slice.data.model.value) seconds"
+            self.lblSocialValueMagnified.text = "\(Int(slice.data.model.value / 60)) mins \(Int(slice.data.model.value.truncatingRemainder(dividingBy: 60)))seconds"
             self.viewMagnifyPieChart.superview?.bringSubview(toFront: self.viewMagnifyPieChart)
             self.viewMagnifyPieChart.backgroundColor = self.colors[slice.hashValue]
         }
@@ -383,6 +421,7 @@ extension MainVC: PieChartDelegate {
             scrollViewMain.isScrollEnabled = true
             viewMagnifyPieChart.isHidden = true
             flagSelected = false
+            lblValuePercentageCenterPieChart.text = ""
         }
         
     }
