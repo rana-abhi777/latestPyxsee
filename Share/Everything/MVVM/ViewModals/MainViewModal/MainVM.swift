@@ -83,7 +83,7 @@ class MainVM
 //MARK: - Social Button Clicked
     func socialBtnClicked(_ index:Int) {
         statusTimeArr = [0,0,0,0,0,0,0,0]
-        statusTimeArr[index]=1
+        statusTimeArr[index]=10
         //changeChildView(index)
     //    setIndicatorColor(btn.tag)
     }    
