@@ -69,7 +69,7 @@ class MainVM
     
   //  setIndicatorColor(0)
     
-    statusTimeArr[0]=1
+    statusTimeArr[0]=10
     
     NotificationCenter.default.addObserver(self, selector: #selector(resetGraphNotification), name: NSNotification.Name(rawValue: "resetGraph"), object: nil)
 
